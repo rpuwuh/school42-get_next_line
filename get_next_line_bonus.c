@@ -6,7 +6,7 @@
 /*   By: bpoetess <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 17:37:02 by bpoetess          #+#    #+#             */
-/*   Updated: 2021/12/17 13:19:20 by bpoetess         ###   ########.fr       */
+/*   Updated: 2021/12/17 13:26:06 by bpoetess         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,15 @@ char	*ft_get_next_buffer(size_t *readc, char *s, char *tail, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char		tail [BUFFER_SIZE + 1];
+	static char		arch [MAX_BUFFER][BUFFER_SIZE + 1];
+	char			*tail;
 	char			*s;
 	char			*temp;
 	size_t			readcount;
 
 	if (BUFFER_SIZE < 1 || fd < 0 || fd > MAX_BUFFER || fd == 3)
 		return (0);
+	tail = arch [fd];
 	tail [BUFFER_SIZE] = '\0';
 	if (ft_strchr(tail, '\n'))
 		return (ft_splitnewline(tail, tail));
