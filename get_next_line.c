@@ -6,7 +6,7 @@
 /*   By: bpoetess <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 17:37:02 by bpoetess          #+#    #+#             */
-/*   Updated: 2021/12/04 18:32:17 by bpoetess         ###   ########.fr       */
+/*   Updated: 2021/12/17 12:28:35 by bpoetess         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*ft_splitnewline(char *buf, char *tail)
 		tail[i - len - 1] = buf [i];
 		i++;
 	}
+	if (!buf[len])
+		ft_cleartail(tail, 0);
 	ft_cleartail(tail, i - len - 1);
 	return (res);
 }
@@ -59,7 +61,7 @@ char	*ft_get_next_buffer(size_t *readc, char *s, char *tail, int fd)
 	char	*temp;
 
 	*readc = read (fd, tail, BUFFER_SIZE);
-	if ((!*readc && !s[0]) || *readc < 0)
+	if (!*readc && !s[0])
 	{
 		free (s);
 		return (0);
@@ -67,8 +69,6 @@ char	*ft_get_next_buffer(size_t *readc, char *s, char *tail, int fd)
 	ft_cleartail(tail, *readc);
 	temp = s;
 	s = ft_strjoin(temp, tail);
-	if (!s)
-		return (0);
 	free(temp);
 	return (s);
 }
@@ -87,7 +87,7 @@ char	*get_next_line(int fd)
 		return (ft_splitnewline(tail, tail));
 	s = ft_strjoin (tail, "");
 	readcount = BUFFER_SIZE;
-	while (readcount == BUFFER_SIZE && !ft_strchr(s, '\n'))
+	while (readcount && !ft_strchr(s, '\n'))
 	{
 		s = ft_get_next_buffer(&readcount, s, tail, fd);
 		if (!s)
